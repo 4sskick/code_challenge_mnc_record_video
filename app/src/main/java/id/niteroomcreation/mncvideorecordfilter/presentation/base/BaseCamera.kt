@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,9 +18,8 @@ import com.daasuu.gpuv.camerarecorder.CameraRecordListener
 import com.daasuu.gpuv.camerarecorder.GPUCameraRecorder
 import com.daasuu.gpuv.camerarecorder.GPUCameraRecorderBuilder
 import com.daasuu.gpuv.camerarecorder.LensFacing
-import com.daasuu.gpuv.egl.filter.GlFilter
-import com.daasuu.gpuv.egl.filter.GlRGBFilter
 import com.google.android.material.snackbar.Snackbar
+import id.niteroomcreation.mncvideorecordfilter.R
 import id.niteroomcreation.mncvideorecordfilter.databinding.AMainBinding
 import id.niteroomcreation.mncvideorecordfilter.presentation.camera.CameraActivity
 import id.niteroomcreation.mncvideorecordfilter.presentation.camera.CameraViewModel
@@ -101,7 +101,7 @@ open class BaseCamera : AppCompatActivity() {
                     binding.actionRecord.text = "Record"
                     binding.rvListFilter.visibility = View.VISIBLE
                     binding.actionRecord.backgroundTintList =
-                        ContextCompat.getColorStateList(this, android.R.color.transparent)
+                        ContextCompat.getColorStateList(this, R.color.default_record)
 
                 } else
                     Snackbar.make(
@@ -148,30 +148,10 @@ open class BaseCamera : AppCompatActivity() {
             it.let {
                 var adapter = FilterAdapter(it, object : FilterListener {
                     override fun onFilterClicked(filter: String) {
-                        when (filter.lowercase()) {
-                            "normal" -> {
-                                gpuCameraRecorder?.setFilter(GlFilter())
-                            }
-                            "red" -> {
-                                var rgbFilter = GlRGBFilter()
-                                rgbFilter.setBlue(0f)
-                                rgbFilter.setGreen(0f)
-                                gpuCameraRecorder?.setFilter(rgbFilter)
-                            }
-                            "green" -> {
-                                var rgbFilter = GlRGBFilter()
-                                rgbFilter.setBlue(0f)
-                                rgbFilter.setRed(0f)
-                                gpuCameraRecorder?.setFilter(rgbFilter)
-                            }
-                            "blue" -> {
-
-                                var rgbFilter = GlRGBFilter()
-                                rgbFilter.setRed(0f)
-                                rgbFilter.setGreen(0f)
-                                gpuCameraRecorder?.setFilter(rgbFilter)
-                            }
-                        }
+                        CommonUtil.filterColor(
+                            colorName = filter,
+                            gpuCameraRecorder = gpuCameraRecorder
+                        )
                     }
                 })
 
@@ -182,7 +162,6 @@ open class BaseCamera : AppCompatActivity() {
                     false
                 )
             }
-
         });
 
     }
@@ -235,13 +214,18 @@ open class BaseCamera : AppCompatActivity() {
 
                 override fun onRecordComplete() {
                     LogHelper.e(TAG, "record already completed")
+                    Snackbar.make(
+                        binding.root,
+                        "Recording stop",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
 
                     //what to do when record completed
                     CommonUtil.storedOnGallery(context = this@BaseCamera, filePath = filePath)
                 }
 
                 override fun onRecordStart() {
-                    LogHelper.e(TAG, "record start")
+                    Toast.makeText(this@BaseCamera, "Recording...", Toast.LENGTH_SHORT).show()
 
                     runOnUiThread {
                         binding.rvListFilter.visibility = View.GONE
@@ -250,6 +234,12 @@ open class BaseCamera : AppCompatActivity() {
 
                 override fun onError(exception: Exception) {
                     LogHelper.e(TAG, exception.message)
+
+                    Snackbar.make(
+                        binding.root,
+                        exception.message.toString(),
+                        Snackbar.LENGTH_LONG
+                    ).show()
                 }
 
                 override fun onCameraThreadFinish() {
@@ -262,13 +252,17 @@ open class BaseCamera : AppCompatActivity() {
 
                 override fun onVideoFileReady() {
                     LogHelper.e(TAG, "video file already ready a.k.a stored on storage")
+                    Snackbar.make(
+                        binding.root,
+                        "video record stored on $filePath",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 }
 
             })
             .videoSize(videoWidth, videoHeight)
             .cameraSize(cameraWidth, cameraHeight)
             .lensFacing(lensFacing)
-//            .filter(GlFilter())
             .build()
     }
 

@@ -9,7 +9,6 @@ import id.niteroomcreation.mncvideorecordfilter.databinding.AMainBinding
 import id.niteroomcreation.mncvideorecordfilter.presentation.base.BaseCamera
 import id.niteroomcreation.mncvideorecordfilter.util.Constant
 
-@AndroidEntryPoint
 class CameraActivity : BaseCamera() {
 
     companion object {

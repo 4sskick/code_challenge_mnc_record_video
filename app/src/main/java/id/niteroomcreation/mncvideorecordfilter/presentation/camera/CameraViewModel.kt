@@ -10,8 +10,7 @@ import javax.inject.Inject
  * Created by Septian Adi Wijaya on 09/04/2023.
  * please be sure to add credential if you use people's code
  */
-@HiltViewModel
-class CameraViewModel @Inject constructor() : ViewModel() {
+class CameraViewModel : ViewModel() {
 
     private val state_ = MutableLiveData<List<CameraFilter>>()
     val state = state_
