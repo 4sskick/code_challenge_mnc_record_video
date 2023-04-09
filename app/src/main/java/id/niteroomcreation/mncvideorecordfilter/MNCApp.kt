@@ -1,7 +1,6 @@
 package id.niteroomcreation.mncvideorecordfilter
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
 
 /**
  * Created by Septian Adi Wijaya on 07/04/2023.

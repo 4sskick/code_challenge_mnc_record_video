@@ -4,7 +4,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
 import id.niteroomcreation.mncvideorecordfilter.databinding.AMainBinding
 import id.niteroomcreation.mncvideorecordfilter.presentation.base.BaseCamera
 import id.niteroomcreation.mncvideorecordfilter.util.Constant
