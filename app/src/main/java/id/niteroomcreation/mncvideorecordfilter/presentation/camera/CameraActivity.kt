@@ -1,15 +1,16 @@
-package id.niteroomcreation.mncvideorecordfilter.presentation
+package id.niteroomcreation.mncvideorecordfilter.presentation.camera
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.Toast
 import androidx.preference.PreferenceManager
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import id.niteroomcreation.mncvideorecordfilter.databinding.AMainBinding
 import id.niteroomcreation.mncvideorecordfilter.presentation.base.BaseCamera
+import id.niteroomcreation.mncvideorecordfilter.util.Constant
 
 @AndroidEntryPoint
-class MainActivity : BaseCamera() {
+class CameraActivity : BaseCamera() {
 
     companion object {
         const val CAMERA_PERMISSION_REQUEST_CODE = 88888
@@ -26,6 +27,11 @@ class MainActivity : BaseCamera() {
         pref = PreferenceManager.getDefaultSharedPreferences(this)
 
         onCreateActivity(binding)
+
+        videoWidth = 720
+        videoHeight = 1280
+        cameraWidth = 1280
+        cameraHeight = 720
     }
 
     override fun onRequestPermissionsResult(
@@ -37,25 +43,22 @@ class MainActivity : BaseCamera() {
         when (requestCode) {
             CAMERA_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(
-                        this@MainActivity,
+                    Snackbar.make(
+                        binding.root,
                         "permission has been granted.",
-                        Toast.LENGTH_SHORT
+                        Snackbar.LENGTH_LONG
                     ).show()
 
-                    permissionGranted = true
-                    pref.edit().putBoolean("permission", permissionGranted).apply()
-
+                    pref.edit().putBoolean(Constant.PERMISSION_KEY, true).apply()
                     setupCamera()
                 } else {
-                    Toast.makeText(
-                        this@MainActivity,
+                    Snackbar.make(
+                        binding.root,
                         "[WARN] permission is not granted.",
-                        Toast.LENGTH_SHORT
+                        Snackbar.LENGTH_SHORT
                     ).show()
 
-                    permissionGranted = false
-                    pref.edit().putBoolean("permission", permissionGranted).apply()
+                    pref.edit().putBoolean(Constant.PERMISSION_KEY, false).apply()
                 }
             }
         }

@@ -8,5 +8,5 @@ import dagger.hilt.android.HiltAndroidApp
  * please be sure to add credential if you use people's code
  */
 @HiltAndroidApp
-class MNCApp :Application(){
+class MNCApp : Application() {
 }

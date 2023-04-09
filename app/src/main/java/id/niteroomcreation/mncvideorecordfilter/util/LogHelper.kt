@@ -50,13 +50,7 @@ object LogHelper {
     //for a pretty print log
     fun j(tag: String?) {
         if (LOGGING_ENABLED) {
-            Log.e(
-                tag, """
-     ${getClassNameMethodNameAndLineNumber()}
-     
-     
-     """.trimIndent()
-            )
+            Log.e(tag, """${getClassNameMethodNameAndLineNumber()}""".trimIndent())
         }
     }
 
@@ -67,10 +61,8 @@ object LogHelper {
     fun j(tag: String?, message: Any?) {
         if (LOGGING_ENABLED) {
             Log.e(
-                tag, """
-     ${getClassNameMethodNameAndLineNumber()}, ${gson.toJson(message)}
-     
-     """.trimIndent()
+                tag,
+                """${getClassNameMethodNameAndLineNumber()}, ${gson.toJson(message)}""".trimIndent()
             )
         }
     }
